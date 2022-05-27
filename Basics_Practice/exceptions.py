@@ -1,0 +1,47 @@
+# creating a simple function to demonstrate exceptions
+
+def exception_handling():
+    try:
+        open("nothing to open")  # giving wrong file path
+    except Exception as e:  # storing the raised exception in variable object e
+        if hasattr(e, 'message'):  # sometimes, exceptions dont have an attribute named 'message', this can be checked with hasattr()
+            print(e.message)  # if it has message attribute, print that message
+        else:
+            print(e)  # else directly print the instance
+    else:  # only get executed when none of the exceptions mentioned are raised
+        print("we didn't get any exception")
+    finally:  # this gets executed irrespective of other steps but at end of exception handling
+        print("print anyway")  # typically we use this to close opened database connections or end any sessions
+
+exception_handling()
+
+# exceptions are hierarchical in nature
+# if you encounter an exception, it can be identified with its parent or child class as well
+
+try:
+    f = open('nonexistent_file')  # we get a file not found error which is a subclass of OS
+except OSError: # we encounter this step first, so the next more accurate exception is ignored
+    print('OS Error')
+except FileNotFoundError:
+    print('File not found Error')
+
+try:
+    f = open('nonexistent_file')
+except FileNotFoundError: # this is more accurate exception and also comes first
+    print('File not found Error')
+except OSError:
+    print('OS Error')
+
+# checking else part
+try:
+    f = open('decorators.py')
+except FileNotFoundError: # this is more accurate exception and also comes first
+    print('File not found Error')
+except OSError:
+    print('OS Error')
+else:  # didnt get any exceptions, hence executing else part
+    print('was able to open file without exceptions')
+finally:  # will execute anyway, using this to close open connections and files
+    print('closing the file')
+    f.close()
+
