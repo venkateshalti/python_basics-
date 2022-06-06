@@ -3,7 +3,7 @@
 def exception_handling():
     try:
         open("nothing to open")  # giving wrong file path
-    except Exception as e:  # storing the raised exception in variable object e
+    except Exception as e:  # e represents an instance of a custom sub-class derived from built-in 'Exception' base class
         if hasattr(e, 'message'):  # sometimes, exceptions dont have an attribute named 'message', this can be checked with hasattr()
             print(e.message)  # if it has message attribute, print that message
         else:
@@ -45,3 +45,33 @@ finally:  # will execute anyway, using this to close open connections and files
     print('closing the file')
     f.close()
 
+
+# let's raise a custom exception
+# we start with defining an exception class inherited from Exception base
+class CustomException(Exception):
+    # this init is needed only if we are trying to customize exception
+    def __init__(self, numerator):
+        self.numerator = numerator
+
+    def __str__(self):
+        return f'you cant divide {self.numerator} by zero'
+
+# let's define a function that raises an exception when certain condition is met, example -> divide by zero
+def divide(a,b):
+    if b == 0:
+        raise CustomException(a)  # 'raise' keyword raises exception class defined above
+    else:
+        return a/b
+
+# when someone calls above function with denominator argument zero, they will get the defined exception
+try:
+    res = divide(3,0)
+except CustomException as e:
+    print(e)
+#giving non-zero deonominator
+try:
+    res = divide(3,1)
+except CustomException as e:
+    print(e)
+else:
+    print(res)
